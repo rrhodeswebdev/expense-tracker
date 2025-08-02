@@ -17,7 +17,7 @@ defmodule ExpensetrackerWeb.Router do
   scope "/", ExpensetrackerWeb do
     pipe_through :browser
 
-    live "/", ExpenseTrackerLive.Index
+    live "/", ExpenseTrackerLive
   end
 
   # Other scopes may use custom stacks.
