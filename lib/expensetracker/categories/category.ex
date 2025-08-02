@@ -11,6 +11,8 @@ defmodule Expensetracker.Categories.Category do
     field :description, :string
     field :monthly_budget, :decimal
 
+    has_many :expenses, Expensetracker.Expenses.Expense
+
     timestamps(type: :utc_datetime)
   end
 
