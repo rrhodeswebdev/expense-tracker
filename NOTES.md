@@ -16,4 +16,7 @@ also utilized AI to help generate tests.
 
 For handling the currency aspects of the App, I used the `Decimal` type and
 module. This is a good choice for handling currency because it avoids the
-precision issues that can arise with floating point numbers.
+precision issues that can arise with floating point numbers. As far as extending
+to other currencies besides USD, I would probably add an option the user can set
+at a global level, and then use that in parallel with
+`Number.Currency.number_to_currency/2` to format it.
