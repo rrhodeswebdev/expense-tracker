@@ -23,4 +23,17 @@ defmodule Expensetracker.Expenses do
     |> Enum.filter(fn expense -> expense.category.id == category_id end)
     |> Enum.reduce(0, fn expense, acc -> acc + expense.amount end)
   end
+
+  @doc """
+  Creates an expense.
+  """
+  def create_expense(attrs \\ %{}) do
+    %Expense{}
+    |> Expense.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def change_expense(%Expense{} = expense, attrs \\ %{}) do
+    Expense.changeset(expense, attrs)
+  end
 end
