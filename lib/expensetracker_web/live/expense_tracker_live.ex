@@ -85,9 +85,26 @@ defmodule ExpensetrackerWeb.ExpenseTrackerLive do
     case Categories.create_category(category_params) do
       {:ok, _category} ->
         categories = Categories.list_categories()
+        expenses = Expenses.list_expenses()
+        category_options = Enum.map(categories, &{&1.name, &1.id})
+
+        categories_with_totals =
+          Enum.map(categories, fn category ->
+            total_expenses =
+              expenses
+              |> Enum.filter(&(&1.category_id == category.id))
+              |> Enum.reduce(Decimal.new(0), &Decimal.add(&2, &1.amount))
+
+            Map.put(category, :total_expenses, total_expenses)
+          end)
 
         {:noreply,
-         assign(socket, categories: categories, show_form: false, category_form: to_form(%{}))}
+         assign(socket,
+           categories: categories_with_totals,
+           category_options: category_options,
+           show_form: false,
+           category_form: to_form(%{})
+         )}
 
       {:error, changeset} ->
         {:noreply, assign(socket, :category_form, to_form(changeset))}
