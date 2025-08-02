@@ -43,10 +43,7 @@
     </div>
 
     <div class="space-y-3">
-      <div
-        :for={category <- Expensetracker.Categories.list_categories()}
-        class="border rounded-lg bg-white"
-      >
+      <div :for={category <- @categories} class="border rounded-lg bg-white">
         <div
           phx-click="toggle_category"
           phx-value-id={category.id}
@@ -83,7 +80,7 @@
             <div
               :for={
                 expense <-
-                  Expensetracker.Expenses.list_expenses()
+                  @expenses
                   |> Enum.filter(&(&1.category_id == category.id))
               }
               class="flex justify-between text-sm"
@@ -126,10 +123,7 @@
               <label class="text-sm">Category</label>
               <select class="rounded border-gray-300">
                 <option value="">Select a category</option>
-                <option
-                  :for={category <- Expensetracker.Categories.list_categories()}
-                  value={category.id}
-                >
+                <option :for={category <- @categories} value={category.id}>
                   {category.name}
                 </option>
               </select>
@@ -158,14 +152,11 @@
         </div>
       </div>
 
-      <.table
-        id="expenses"
-        rows={Expensetracker.Expenses.list_expenses() |> Enum.sort_by(& &1.date, {:desc, Date})}
-      >
+      <.table id="expenses" rows={@expenses |> Enum.sort_by(& &1.date, {:desc, Date})}>
         <:col :let={expense} label="Description">{expense.description}</:col>
         <:col :let={expense} label="Amount">${expense.amount}</:col>
         <:col :let={expense} label="Category">
-          {Expensetracker.Categories.list_categories()
+          {@categories
           |> Enum.find(&(&1.id == expense.category_id))
           |> then(&(&1 && &1.name))}
         </:col>

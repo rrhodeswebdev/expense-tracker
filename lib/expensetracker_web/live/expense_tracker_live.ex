@@ -1,9 +1,19 @@
 defmodule ExpensetrackerWeb.ExpenseTrackerLive do
   use ExpensetrackerWeb, :live_view
+  alias Expensetracker.Categories
 
   def mount(_params, _session, socket) do
+    categories = Categories.list_categories()
+    expenses = Expensetracker.Expenses.list_expenses()
+
     {:ok,
-     assign(socket, show_form: false, show_expense_form: false, expanded_categories: MapSet.new())}
+     assign(socket,
+       show_form: false,
+       show_expense_form: false,
+       expanded_categories: MapSet.new(),
+       categories: categories,
+       expenses: expenses
+     )}
   end
 
   def handle_event("toggle_form", _params, socket) do
