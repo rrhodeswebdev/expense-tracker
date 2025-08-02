@@ -10,7 +10,9 @@ defmodule Expensetracker.Expenses do
   Returns a list of expenses.
   """
   def list_expenses do
-    Repo.all(Expense) |> Repo.preload(:category)
+    Repo.all(Expense)
+    |> Repo.preload(:category)
+    |> Enum.sort_by(& &1.date, {:desc, Date})
   end
 
   @doc """

@@ -13,12 +13,22 @@ defmodule ExpensetrackerWeb.ExpenseTrackerLive do
 
     category_options = Enum.map(categories, &{&1.name, &1.id})
 
+    categories_with_totals =
+      Enum.map(categories, fn category ->
+        total_expenses =
+          expenses
+          |> Enum.filter(&(&1.category_id == category.id))
+          |> Enum.reduce(Decimal.new(0), &Decimal.add(&2, &1.amount))
+
+        Map.put(category, :total_expenses, total_expenses)
+      end)
+
     {:ok,
      assign(socket,
        show_form: false,
        show_expense_form: false,
        expanded_categories: MapSet.new(),
-       categories: categories,
+       categories: categories_with_totals,
        category_options: category_options,
        expenses: expenses,
        category_form: to_form(category_changeset),
@@ -91,10 +101,20 @@ defmodule ExpensetrackerWeb.ExpenseTrackerLive do
         categories = Categories.list_categories()
         category_options = Enum.map(categories, &{&1.name, &1.id})
 
+        categories_with_totals =
+          Enum.map(categories, fn category ->
+            total_expenses =
+              expenses
+              |> Enum.filter(&(&1.category_id == category.id))
+              |> Enum.reduce(Decimal.new(0), &Decimal.add(&2, &1.amount))
+
+            Map.put(category, :total_expenses, total_expenses)
+          end)
+
         {:noreply,
          assign(socket,
            expenses: expenses,
-           categories: categories,
+           categories: categories_with_totals,
            category_options: category_options,
            show_expense_form: false,
            expense_form: to_form(%{})
